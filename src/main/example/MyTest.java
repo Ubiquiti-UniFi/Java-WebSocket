@@ -1,13 +1,18 @@
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.Socket;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.channels.NotYetConnectedException;
+import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -16,7 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocket;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.TrustManagerFactory;
@@ -24,6 +31,7 @@ import javax.net.ssl.X509TrustManager;
 
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.drafts.Draft;
+import org.java_websocket.drafts.Draft_10;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
 
@@ -36,23 +44,24 @@ public class MyTest extends WebSocketClient {
     }
 
     public static void main(String[] args) throws Exception {
-        WebSocketClient client = new MyTest(new URI(
-                "wss://localhost:443/connect"), new Draft_17());
+        WebSocketClient client;
+        client = new MyTest(new URI("wss://sdn-dev.ubnt.com:7443/connect"), new Draft_17());
         SSLContext sslContext = SSLContext.getInstance("TLS");
-        sslContext.init(null,
-                new TrustManager[] { new LocalSSLTrustManager() }, null);
-
+        //sslContext.init(null, new TrustManager[] { new LocalSSLTrustManager() }, null);
+        sslContext.init( null, null, null );
         SSLSocketFactory factory = sslContext.getSocketFactory();
-        client.setSocket(factory.createSocket());
-        client.connect();
+        SSLSocket sslSocket = (SSLSocket) factory.createSocket();
+        sslSocket.setEnabledProtocols(new String[] {"TLSv1"});
+        client.setSocket(sslSocket);
 
-        Gson gson = new Gson();
-        RandomJSON rjson = new RandomJSON();
-
-        while (true) {
-            Thread.sleep(1 * 1000);
-            Object o = rjson.createRandomObject(1, 150, 0.0);
-            client.send(gson.toJson(o));
+        if (client.connectBlocking()) {
+            Gson gson = new Gson();
+            RandomJSON rjson = new RandomJSON();
+            while (true) {
+                Thread.sleep(5 * 1000);
+                Object o = rjson.createRandomObject(1, 100, 0.0);
+                client.send(gson.toJson(o));
+            }
         }
     }
 
