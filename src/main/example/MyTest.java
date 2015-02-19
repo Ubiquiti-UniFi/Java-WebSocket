@@ -35,7 +35,7 @@ import org.java_websocket.drafts.Draft_10;
 import org.java_websocket.drafts.Draft_17;
 import org.java_websocket.handshake.ServerHandshake;
 
-import com.google.gson.Gson;
+//import com.google.gson.Gson;
 
 public class MyTest extends WebSocketClient {
 
@@ -44,8 +44,15 @@ public class MyTest extends WebSocketClient {
     }
 
     public static void main(String[] args) throws Exception {
+        String wss = null;
+        if (args.length == 0) {
+            wss = "wss://echo.websocket.org";
+        } else {
+            wss = args[0];
+        }
+
         WebSocketClient client;
-        client = new MyTest(new URI("wss://sdn-dev.ubnt.com:7443/connect"), new Draft_17());
+        client = new MyTest(new URI(wss), new Draft_17());
         SSLContext sslContext = SSLContext.getInstance("TLS");
         //sslContext.init(null, new TrustManager[] { new LocalSSLTrustManager() }, null);
         sslContext.init( null, null, null );
@@ -54,13 +61,15 @@ public class MyTest extends WebSocketClient {
         sslSocket.setEnabledProtocols(new String[] {"TLSv1"});
         client.setSocket(sslSocket);
 
+        System.out.println(String.format("connecting to %s", wss));
         if (client.connectBlocking()) {
-            Gson gson = new Gson();
-            RandomJSON rjson = new RandomJSON();
+//            Gson gson = new Gson();
+//            RandomJSON rjson = new RandomJSON();
             while (true) {
                 Thread.sleep(5 * 1000);
-                Object o = rjson.createRandomObject(1, 100, 0.0);
-                client.send(gson.toJson(o));
+//                Object o = rjson.createRandomObject(1, 100, 0.0);
+//                client.send(gson.toJson(o));
+                client.send("{\"cmd\":\"pin\"}");
             }
         }
     }
