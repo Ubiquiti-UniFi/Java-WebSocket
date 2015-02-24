@@ -14,3 +14,7 @@ target
 bin
 
 /doc
+/dist
+.*.swp
+.*.swo
+
