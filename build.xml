@@ -14,8 +14,28 @@
 	<target name="jar" depends="compile">
 		<jar destfile="dist/java_websocket.jar">
 			<fileset dir="build/classes" includes="**/*.class" />
-            <fileset dir="build/examples" includes="**/*.class" />
+			<fileset dir="build/examples" includes="**/*.class" />
 		</jar>
+	</target>
+
+	<target name="echo.websocket.org" depends="jar" description="test with wss://echo.websocket.org">
+		<antcall target="_ant_run">
+			<param name="args" value="wss://echo.websocket.org" />
+		</antcall>
+	</target>
+
+	<target name="sdn-dev.ubnt.com" depends="jar" description="test with wss://sdn-dev.ubnt.com:7443/connect">
+		<antcall target="_ant_run">
+			<param name="args" value="wss://sdn-dev.ubnt.com:7443/connect" />
+		</antcall>
+	</target>
+
+	<target name="_ant_run">
+		<echo message="use CTRL-C to stop" />
+		<echo message="" />
+		<java classname="MyTest" classpath="dist/java_websocket.jar" fork="true" >
+			<arg line="${args}" />
+		</java>
 	</target>
 
 	<target name="doc">

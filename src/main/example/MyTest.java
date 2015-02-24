@@ -54,7 +54,7 @@ public class MyTest extends WebSocketClient {
         WebSocketClient client;
         client = new MyTest(new URI(wss), new Draft_17());
         SSLContext sslContext = SSLContext.getInstance("TLS");
-        //sslContext.init(null, new TrustManager[] { new LocalSSLTrustManager() }, null);
+        // sslContext.init(null, new TrustManager[] { new LocalSSLTrustManager() }, null);
         sslContext.init( null, null, null );
         SSLSocketFactory factory = sslContext.getSocketFactory();
         SSLSocket sslSocket = (SSLSocket) factory.createSocket();
@@ -63,13 +63,14 @@ public class MyTest extends WebSocketClient {
 
         System.out.println(String.format("connecting to %s", wss));
         if (client.connectBlocking()) {
-//            Gson gson = new Gson();
-//            RandomJSON rjson = new RandomJSON();
+            // Gson gson = new Gson();
+            // RandomJSON rjson = new RandomJSON();
             while (true) {
                 Thread.sleep(5 * 1000);
-//                Object o = rjson.createRandomObject(1, 100, 0.0);
-//                client.send(gson.toJson(o));
-                client.send("{\"cmd\":\"pin\"}");
+                String payload = "{\"cmd\":\"ping\"}";
+                // String payload = gson.toJson(rjson.createRandomObject(1, 100, 0.0));
+                System.out.println(String.format("sending: %s", payload));
+                client.send(payload);
             }
         }
     }
@@ -82,7 +83,6 @@ public class MyTest extends WebSocketClient {
     @Override
     public void onMessage(String message) {
         System.out.println("receiving: " + message);
-        send(message);
     }
 
     @Override
