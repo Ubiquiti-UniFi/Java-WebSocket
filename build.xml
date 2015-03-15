@@ -2,7 +2,15 @@
 
 	<target name="all" depends="doc,jar" />
 
-	<target name="compile">
+	<target name="init">
+		<exec executable="git" outputproperty="git.version">
+			<arg value="describe" />
+			<arg value="--dirty" />
+		</exec>
+		<echo message="Version: ${git.version}" />
+	</target>
+
+	<target name="compile" depends="init">
 		<mkdir dir="build/classes" />
 		<mkdir dir="build/examples" />
 		<javac includeantruntime="false" debug="on" srcdir="src/main/java"
@@ -10,7 +18,7 @@
 	</target>
 
 	<target name="jar" depends="compile">
-		<jar destfile="dist/java_websocket.jar">
+		<jar destfile="dist/${git.version}.jar">
 			<fileset dir="build/classes" includes="**/*.class" />
 		</jar>
 	</target>
