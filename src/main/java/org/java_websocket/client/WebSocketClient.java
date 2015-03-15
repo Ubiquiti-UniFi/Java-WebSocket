@@ -50,7 +50,7 @@ public abstract class WebSocketClient extends WebSocketAdapter implements Runnab
 
 	private Draft draft;
 
-	private Map<String,String> headers;
+	protected Map<String,String> headers;
 
 	private CountDownLatch connectLatch = new CountDownLatch( 1 );
 
