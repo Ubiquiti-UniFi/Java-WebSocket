@@ -287,7 +287,7 @@ public class WebSocketImpl implements WebSocket {
 						open( handshake );
 						return true;
 					} else {
-						close( CloseFrame.PROTOCOL_ERROR, "draft " + draft + " refuses handshake" );
+						close( CloseFrame.PROTOCOL_ERROR, "draft " + draft + " refuses handshake code: " + handshake.getHttpStatus() );
 					}
 				}
 			} catch ( InvalidHandshakeException e ) {
