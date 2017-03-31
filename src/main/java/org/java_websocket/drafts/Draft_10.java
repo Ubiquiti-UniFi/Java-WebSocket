@@ -7,6 +7,8 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
+import java.util.Iterator;
+
 
 import org.java_websocket.WebSocket.Role;
 import org.java_websocket.exceptions.InvalidDataException;
@@ -67,6 +69,9 @@ public class Draft_10 extends Draft {
 
 	@Override
 	public HandshakeState acceptHandshakeAsClient( ClientHandshake request, ServerHandshake response ) throws InvalidHandshakeException {
+        if( response.getHttpStatus() == 400) {
+            return HandshakeState.MATCHED_WITH_ERRORS;
+        }
 		if( !request.hasFieldValue( "Sec-WebSocket-Key" ) || !response.hasFieldValue( "Sec-WebSocket-Accept" ) )
 			return HandshakeState.NOT_MATCHED;
 

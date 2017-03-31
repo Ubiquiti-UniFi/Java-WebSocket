@@ -273,7 +273,7 @@ public class WebSocketImpl implements WebSocket {
 					}
 					ServerHandshake handshake = (ServerHandshake) tmphandshake;
 					handshakestate = draft.acceptHandshakeAsClient( handshakerequest, handshake );
-					if( handshakestate == HandshakeState.MATCHED ) {
+					if( (handshakestate == HandshakeState.MATCHED) || (handshakestate == HandshakeState.MATCHED_WITH_ERRORS) ) {
 						try {
 							wsl.onWebsocketHandshakeReceivedAsClient( this, handshakerequest, handshake );
 						} catch ( InvalidDataException e ) {
@@ -284,8 +284,10 @@ public class WebSocketImpl implements WebSocket {
 							flushAndClose( CloseFrame.NEVER_CONNECTED, e.getMessage(), false );
 							return false;
 						}
-						open( handshake );
-						return true;
+                        if (handshakestate == HandshakeState.MATCHED) {
+                            open( handshake );
+                            return true;
+                        }
 					} else {
 						close( CloseFrame.PROTOCOL_ERROR, "draft " + draft + " refuses handshake" );
 					}
