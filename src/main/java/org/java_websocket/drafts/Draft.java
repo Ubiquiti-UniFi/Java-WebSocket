@@ -222,7 +222,7 @@ public abstract class Draft {
 	public void setParseMode( Role role ) {
 		this.role = role;
 	}
-	
+
 	public Role getRole() {
 		return role;
 	}

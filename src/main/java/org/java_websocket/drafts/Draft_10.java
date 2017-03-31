@@ -7,8 +7,6 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
-import java.util.Iterator;
-
 
 import org.java_websocket.WebSocket.Role;
 import org.java_websocket.exceptions.InvalidDataException;
@@ -278,7 +276,7 @@ public class Draft_10 extends Draft {
 					incompleteframe.rewind();
 					extendedframe.put( incompleteframe );
 					incompleteframe = extendedframe;
-					
+
 					return translateFrame( buffer );
 				}
 			}
