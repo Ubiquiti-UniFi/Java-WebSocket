@@ -32,6 +32,10 @@ public abstract class WebSocketAdapter implements WebSocketListener {
 	public void onWebsocketHandshakeReceivedAsClient( WebSocket conn, ClientHandshake request, ServerHandshake response ) throws InvalidDataException {
 	}
 
+	@Override
+	public void onWebsocketHandshakeError( WebSocket conn, ClientHandshake request, ServerHandshake response ) {
+	}
+
 	/**
 	 * This default implementation does not do anything which will cause the connections to always progress.
 	 * 

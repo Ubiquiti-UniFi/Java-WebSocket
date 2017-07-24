@@ -287,6 +287,7 @@ public class WebSocketImpl implements WebSocket {
 						open( handshake );
 						return true;
 					} else {
+						wsl.onWebsocketHandshakeError( this, handshakerequest, handshake );
 						close( CloseFrame.PROTOCOL_ERROR, "draft " + draft + " refuses handshake" );
 					}
 				}

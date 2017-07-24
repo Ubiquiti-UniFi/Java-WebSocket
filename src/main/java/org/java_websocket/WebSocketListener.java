@@ -123,6 +123,19 @@ public interface WebSocketListener {
 	public void onWebsocketError( WebSocket conn, Exception ex );
 
 	/**
+	 * Called on the client side when the connection fails to complete the
+	 * handshake.
+	 * 
+	 * @param conn
+	 *            The WebSocket related to this event
+	 * @param request
+	 *            The handshake initially send out to the server by this websocket.
+	 * @param response
+	 *            The handshake the server sent in response to the request.
+	 */
+	public void onWebsocketHandshakeError( WebSocket conn, ClientHandshake request, ServerHandshake response );
+
+	/**
 	 * Called a ping frame has been received.
 	 * This method must send a corresponding pong by itself.
 	 * 
