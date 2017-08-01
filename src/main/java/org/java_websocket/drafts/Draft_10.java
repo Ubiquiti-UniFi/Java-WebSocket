@@ -67,6 +67,9 @@ public class Draft_10 extends Draft {
 
 	@Override
 	public HandshakeState acceptHandshakeAsClient( ClientHandshake request, ServerHandshake response ) throws InvalidHandshakeException {
+        if( response.getHttpStatus() == 400) {
+            return HandshakeState.MATCHED_WITH_ERRORS;
+        }
 		if( !request.hasFieldValue( "Sec-WebSocket-Key" ) || !response.hasFieldValue( "Sec-WebSocket-Accept" ) )
 			return HandshakeState.NOT_MATCHED;
 
@@ -273,7 +276,7 @@ public class Draft_10 extends Draft {
 					incompleteframe.rewind();
 					extendedframe.put( incompleteframe );
 					incompleteframe = extendedframe;
-					
+
 					return translateFrame( buffer );
 				}
 			}

@@ -34,6 +34,8 @@ public abstract class Draft {
 	public enum HandshakeState {
 		/** Handshake matched this Draft successfully */
 		MATCHED,
+        /** Handshake matched, but produced errors */
+        MATCHED_WITH_ERRORS,
 		/** Handshake is does not match this Draft */
 		NOT_MATCHED
 	}
@@ -220,7 +222,7 @@ public abstract class Draft {
 	public void setParseMode( Role role ) {
 		this.role = role;
 	}
-	
+
 	public Role getRole() {
 		return role;
 	}

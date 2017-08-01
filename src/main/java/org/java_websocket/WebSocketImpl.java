@@ -40,7 +40,7 @@ import org.java_websocket.util.Charsetfunctions;
  * Represents one end (client or server) of a single WebSocketImpl connection.
  * Takes care of the "handshake" phase, then allows for easy sending of
  * text frames, and receiving frames through an event-based model.
- * 
+ *
  */
 public class WebSocketImpl implements WebSocket {
 
@@ -101,7 +101,7 @@ public class WebSocketImpl implements WebSocket {
 	private String closemessage = null;
 	private Integer closecode = null;
 	private Boolean closedremotely = null;
-	
+
 	private String resourceDescriptor = null;
 
 	/**
@@ -120,7 +120,7 @@ public class WebSocketImpl implements WebSocket {
 
 	/**
 	 * crates a websocket with client role
-	 * 
+	 *
 	 * @param socket
 	 *            may be unbound
 	 */
@@ -146,7 +146,7 @@ public class WebSocketImpl implements WebSocket {
 	}
 
 	/**
-	 * 
+	 *
 	 */
 	public void decode( ByteBuffer socketBuffer ) {
 		assert ( socketBuffer.hasRemaining() );
@@ -273,7 +273,7 @@ public class WebSocketImpl implements WebSocket {
 					}
 					ServerHandshake handshake = (ServerHandshake) tmphandshake;
 					handshakestate = draft.acceptHandshakeAsClient( handshakerequest, handshake );
-					if( handshakestate == HandshakeState.MATCHED ) {
+					if( (handshakestate == HandshakeState.MATCHED) || (handshakestate == HandshakeState.MATCHED_WITH_ERRORS) ) {
 						try {
 							wsl.onWebsocketHandshakeReceivedAsClient( this, handshakerequest, handshake );
 						} catch ( InvalidDataException e ) {
@@ -284,8 +284,10 @@ public class WebSocketImpl implements WebSocket {
 							flushAndClose( CloseFrame.NEVER_CONNECTED, e.getMessage(), false );
 							return false;
 						}
-						open( handshake );
-						return true;
+                        if (handshakestate == HandshakeState.MATCHED) {
+                            open( handshake );
+                            return true;
+                        }
 					} else {
 						wsl.onWebsocketHandshakeError( this, handshakerequest, handshake );
 						close( CloseFrame.PROTOCOL_ERROR, "draft " + draft + " refuses handshake" );
@@ -439,7 +441,7 @@ public class WebSocketImpl implements WebSocket {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param remote
 	 *            Indicates who "generated" <code>code</code>.<br>
 	 *            <code>true</code> means that this endpoint received the <code>code</code> from the other endpoint.<br>
@@ -540,7 +542,7 @@ public class WebSocketImpl implements WebSocket {
 
 	/**
 	 * Send Text data to the other end.
-	 * 
+	 *
 	 * @throws IllegalArgumentException
 	 * @throws NotYetConnectedException
 	 */
@@ -553,7 +555,7 @@ public class WebSocketImpl implements WebSocket {
 
 	/**
 	 * Send Binary data (plain bytes) to the other end.
-	 * 
+	 *
 	 * @throws IllegalArgumentException
 	 * @throws NotYetConnectedException
 	 */
@@ -620,7 +622,7 @@ public class WebSocketImpl implements WebSocket {
 
 		resourceDescriptor = handshakedata.getResourceDescriptor();
 		assert( resourceDescriptor != null );
-		
+
 		// Notify Listener
 		try {
 			wsl.onWebsocketHandshakeSentAsClient( this, this.handshakerequest );
